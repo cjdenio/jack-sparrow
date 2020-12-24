@@ -7,16 +7,21 @@ const app = new App({
 });
 
 app.message(async ({ event, client }) => {
-  const user = await client.users.info({
-    user: event.user,
-  });
+  if (event.channel == process.env.SHIP_CHANNEL && !event.thread_ts) {
+    let user;
 
-  const permalink = await client.chat.getPermalink({
-    channel: event.channel,
-    message_ts: event.ts,
-  });
+    try {
+      user = await client.users.info({
+        user: event.user,
+      });
+    } catch (e) {
+      console.log(`failed to fetch user ${event.user}`);
+    }
 
-  if (event.channel == process.env.SHIP_CHANNEL) {
+    const permalink = await client.chat.getPermalink({
+      channel: event.channel,
+      message_ts: event.ts,
+    });
     client.chat.postMessage({
       channel: process.env.PIRATES_CHANNEL,
       blocks: [
@@ -35,13 +40,22 @@ app.message(async ({ event, client }) => {
           },
         },
         {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: event.text,
+          },
+        },
+        {
           type: "context",
           elements: [
-            {
-              type: "image",
-              image_url: user.user.profile.image_48,
-              alt_text: "hello",
-            },
+            ...(user
+              ? [{
+                type: "image",
+                image_url: user.user.profile.image_48,
+                alt_text: "hello",
+              }]
+              : []),
             {
               type: "mrkdwn",
               text: `Posted by <@${event.user}>`,
