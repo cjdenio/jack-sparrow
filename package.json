@@ -1,0 +1,20 @@
+{
+  "name": "jack-sparrow",
+  "version": "1.0.0",
+  "description": "Slackbot for #pirates-guild",
+  "main": "index.js",
+  "repository": "https://github.com/cjdenio/jack-sparrow",
+  "author": "Caleb Denio <cjdenio44@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@slack/bolt": "^2.5.0",
+    "dotenv": "^8.2.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
